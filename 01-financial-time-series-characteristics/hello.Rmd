@@ -1,0 +1,109 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+Install the package `fBasics` first
+
+```{r}
+install.packages("fBasics")
+```
+
+Print working directory
+
+```{r}
+getwd()
+```
+
+Change working directory
+
+```{r}
+setwd('financial-time-series/chapter1')
+```
+
+Make sure the working directory is correct
+
+```{r}
+getwd()
+```
+
+Load the package `fBasics`
+
+```{r}
+library(fBasics) # load the package fBasics
+da = read.table("../data/d-ibm3dx7008.txt", header = T) # load the data
+# header=T means 1st row of the data file contains
+# variable names. The default is header=F, i.e. no names
+dim(da) # show the size of the data: rows columns
+```
+```{r}
+da[1,] # print the first row of the data
+```
+```{r}
+ibm = da[,2] # obtain IBM simple returns
+sibm = ibm*100 # percentage simple returns
+basicStats(sibm) # compute the summary statistics
+```
+
+nobs (sample size)
+NAs	(# of missing values)
+1. Quartile	(25th percentile)		
+3. Quartile	(75th percentile)
+Mean	(sample mean)
+Median	(sample median)		
+Sum	(sum of the percentage simple returns)
+SE Mean	(standard error of the sample mean)
+LCL Mean (lower bound of 95% conf. interval for mean)
+UCL Mean (upper bound of 95% conf. interval for mean)
+Variance (sample variance)
+Stdev (sample standard error)
+Skewness (sample skewness)
+Kurtosis (sample excess kurtosis)
+
+Alternatively, one can run individual commands
+```{r}
+mean(sibm)
+```
+```{r}
+var(sibm)
+```
+```{r}
+sqrt(var(sibm))
+```
+```{r}
+skewness(sibm)
+```
+```{r}
+kurtosis(sibm)
+```
+Simple tests
+```{r}
+n = length(sibm)
+s1 = skewness(sibm)
+t1 = s1/sqrt(6/n) # compute test statistic
+t1
+```
+
+```{r}
+pv = 2*(1-pnorm(t1)) # compute p-value
+pv
+```
+Turn to log returns in percentages
+```{r}
+libm = 100*log(ibm + 1)
+t.test(libm) # test mean being zero
+```
+The result shoes that the hypothesis of zero expected return cannot be rejected at the 5% or 10% level.
+```{r}
+normalTest(libm, method='jb') # normality test
+```
+The result shows the normality for log return is rejected. For more information about Jarque-Bera normality test see the paper "A Test for Normality of Observations and Regression Residuals"
+
+
+
+
+
+
+
+
+
